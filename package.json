@@ -1,0 +1,11 @@
+{
+  "name": "jaans-algebra-hoops",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Jaan's Algebra Hoops - a word-problem training app. No build step, no dependencies.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "start": "python3 -m http.server 8080"
+  }
+}

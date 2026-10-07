@@ -1,0 +1,19 @@
+{
+  "name": "Jaan's Algebra Hoops",
+  "short_name": "Algebra Hoops",
+  "description": "Read the play. Build the equation. Solve the game. A word-problem training app.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0d10",
+  "theme_color": "#0c0d10",
+  "lang": "en-CA",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
