@@ -11,7 +11,7 @@
 // All paths are relative, so this works at a domain root and inside a GitHub
 // Pages project folder (username.github.io/repository-name/).
 // ---------------------------------------------------------------------------
-const VERSION = 'v1.0.0';
+const VERSION = 'v1.1.0';
 const CACHE = `jaans-algebra-hoops-${VERSION}`;
 
 const FILES = [

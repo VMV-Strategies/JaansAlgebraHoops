@@ -21,7 +21,7 @@ import { STAGE_TEXT, STRATEGY_TEXT, ROUTINE, SKILL_LABELS, nod } from '../conten
 import { ACHIEVEMENTS } from '../store/progress.js';
 import { esc, rich, xy, icon, coach, feedback, shuffled, bar } from './dom.js';
 import { eqInput, pushTok, popTok, tokSrc, keyToTok } from './eqinput.js';
-import { diagram } from './diagrams.js';
+import { diagram, diagramCaption } from './diagrams.js';
 import { paperHTML, letsFor } from './paper.js';
 
 const FLOW = { full: ['read', 'players', 'lets', 'clue', 'strategy', 'solve', 'check', 'final', 'done'], let: ['read', 'players', 'lets', 'done'] };
@@ -36,7 +36,7 @@ export function startProblem({ spec, mode = 'learn', scope = 'full' }) {
   const s = {
     id: Date.now(), spec, mode, scope, stage: 'read', fresh: true, started: Date.now(),
     letLevel: st.letLevel(mode, !!spec.tutorial),
-    map: null, order: [], showDg: false,
+    map: null, order: [], showDg: mode !== 'game',
     read: { hl: [], checked: mode === 'game', pick: null, done: false, wrong: 0, tried: [], fb: null },
     players: { sel: [], done: false, wrong: 0, fb: null },
     lets: { x: {}, y: {}, done: false, wrong: 0, fb: null },
@@ -144,13 +144,22 @@ function storyCard(s, p) {
     const hot = s.stage === 'clue' && s.clue.eq !== null ? p.eqs[s.clue.eq].sent : s.stage === 'final' ? [p.parsed.length - 1] : [];
     body = p.parsed.map((ps, si) => `<span class="sent${hot.includes(si) ? ' hot' : ''}">${esc(ps.text)}</span>`).join(' ');
   }
-  const canDraw = s.stage !== 'read';
+  const canDraw = true, ds = dgState(s, p);
   return `<section class="story card" aria-label="The problem">
     <div class="story-top"><span class="eyebrow">The play</span>
       ${canDraw ? `<button type="button" class="linkbtn" data-a="dg" aria-expanded="${s.showDg}">${s.showDg ? 'Hide picture' : 'Picture it'}</button>` : ''}</div>
     <p class="story-text${tappable ? ' tapping' : ''}">${body}</p>
-    ${canDraw && s.showDg ? `<div class="story-dg">${diagram(p, s.map, s.order.length === 2)}</div>` : ''}
+    ${canDraw && s.showDg ? `<div class="story-dg">${diagram(p, ds)}<p class="dg-say">${esc(diagramCaption(p, ds))}</p></div>` : ''}
   </section>`;
+}
+
+/** What the picture may show right now: letters, built equations, solved values. */
+function dgState(s, p) {
+  let sol = null;
+  if (s.map && s.strat.pick && (['check', 'final', 'done'].includes(s.stage) || (s.stage === 'solve' && s.solve.i >= plan().steps.length))) {
+    const v = plan().sol; sol = { p: v[s.map.p], q: v[s.map.q] };
+  }
+  return { map: s.map, eqs: p.eqs.map((_, i) => s.order.includes(i)), sol };
 }
 
 function notesCard(s, p) {
@@ -444,6 +453,7 @@ function stageDone(s, p) {
     <p class="eyebrow">${s.spec.tutorial ? 'Tutorial complete' : 'Final buzzer'}</p>
     <h2 class="big">${s.spec.tutorial ? `That is the whole routine, ${esc(name)}.` : s.total >= 90 ? 'Clean game.' : s.total >= 70 ? 'Solid work.' : 'Good reps.'}</h2>
     <div class="scoreline"><span class="score-n">${s.total}</span><span class="score-l">process score<br><small>${s.hints} hint${s.hints === 1 ? '' : 's'} · about ${mins} min</small></span></div>
+    <div class="story card"><span class="eyebrow">The play, solved</span><div class="story-dg first">${diagram(p, dgState(s, p))}</div></div>
     <div class="boxscore card"><span class="eyebrow">Box score</span>${rows}
       <p class="fine">Scored on the whole process, not just the final number.</p></div>
     ${earned.length ? `<div class="earned">${earned.map(a => `<div class="badge got"><span class="badge-ic">🏀</span><div><strong>${esc(a.name)}</strong><span>${esc(a.desc)}</span></div></div>`).join('')}</div>` : ''}

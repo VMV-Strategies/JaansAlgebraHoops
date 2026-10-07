@@ -12,8 +12,11 @@ import { insights, masteryOf, accuracy, SKILL_LABELS, MISTAKES, ROUTINE } from '
 import { esc, rich, icon, bar, ballSVG, courtSVG, confirmDialog, coach } from './dom.js';
 import { startProblem, hasLiveSession, describeSession } from './problem.js';
 import { solutionBlocks, paperHTML } from './paper.js';
+import { diagram } from './diagrams.js';
+import { buildPlan } from '../core/solver.js';
+import { inst } from '../core/math.js';
 
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.1.0';
 const MODES = {
   learn: ['Learn', 'Coaching at every step. Start here.'],
   practice: ['Practice', 'You drive. Hints when you ask.'],
@@ -341,6 +344,8 @@ export const teacherView = {
     const map = h.map || { p: 'x', q: 'y' }, strat = h.strategy || prob.strategy.best;
     const notes = teacherTab === 'notes';
     const blocks = solutionBlocks(prob, map, strat, { notes, eli, final: h.final });
+    const solved = buildPlan(prob.eqs.map(e => inst(e.tpl, map)), strat).sol;
+    const picture = diagram(prob, { map, eqs: [true, true], sol: { p: solved[map.p], q: solved[map.q] } });
     return `<div class="page teacher">
       <a class="backlink noprint" href="#/progress">${icon.back} Progress</a>
       ${pageHead('Show my teacher', h.title, `<button type="button" class="iconbtn noprint" data-a="print" aria-label="Print this solution">${icon.print}</button>`)}
@@ -352,6 +357,7 @@ export const teacherView = {
       ${notes ? `<div class="noprint right">${eliSeg(eli)}</div>` : ''}
       <article class="paper sheet${notes ? ' with-notes' : ''}">
         <p class="pp-problem">${esc(prob.text)}</p>
+        ${notes ? `<div class="pp-picture">${picture}</div>` : ''}
         ${paperHTML(blocks, map)}
       </article>
       <div class="col noprint"><a class="btn primary wide" href="#/train">Another problem</a><a class="btn ghost wide" href="#/home">Home</a></div>

@@ -131,3 +131,27 @@ test('Playbook: all math in the reference pages typesets', () => {
     (texts.match(/«(.*?)»/g) || []).forEach(m => assert.doesNotThrow(() => tokenize(m.slice(1, -1)), `${a.id}: ${m}`));
   }));
 });
+
+test('diagrams: every problem has a picture at every stage, with no broken values', async () => {
+  const { diagram, diagramCaption } = await import('../js/ui/diagrams.js');
+  const { generate, CATEGORIES } = await import('../js/content/categories.js');
+  const specs = [...Array(9)].map((_, i) => worksheetSpec(i + 1));
+  CATEGORIES.forEach(c => { for (let i = 0; i < 60; i++) specs.push(generate(c.id, 500 + i * 131)); });
+  specs.forEach(spec => {
+    const prob = buildProblem(spec);
+    for (const map of [null, { p: 'x', q: 'y' }, { p: 'y', q: 'x' }]) {
+      const stages = [{ map }, { map, eqs: [true, false] }, { map, eqs: [false, true] }, { map, eqs: [true, true] }];
+      if (map) stages.push({ map, eqs: [true, true], sol: prob.solution });
+      stages.forEach(st => {
+        const html = diagram(prob, st);
+        assert.ok(html.length > 200, `${prob.cat}: picture is empty`);
+        assert.ok(!/undefined|NaN|Infinity|null/.test(html), `${prob.cat} ${JSON.stringify(spec.params)}: broken value in picture`);
+        assert.ok(diagramCaption(prob, st).length > 10);
+        // before the Let step the picture must not use x or y; before solving it must not reveal an answer
+        if (!map) assert.ok(!/<i>[xy]<\/i>/.test(html), `${prob.cat}: letters shown before Let statements`);
+      });
+      const solvedHtml = map && diagram(prob, { map, eqs: [true, true], sol: prob.solution });
+      if (map) assert.ok(solvedHtml.includes(String(prob.solution.p)), `${prob.cat}: solved picture shows the answer`);
+    }
+  });
+});

@@ -337,6 +337,32 @@ button.w { border-bottom: 2px dotted var(--line); border-radius: 7px 7px 2px 2px
 .dg-road-a { stroke: var(--accent); opacity: 1; }
 .dg-dot { fill: var(--bg); stroke: var(--ink); stroke-width: 2; }
 
+/* pictures that grow with the problem */
+.dgwrap { display: flex; flex-direction: column; gap: 12px; }
+.story-dg.first { margin-top: 8px; padding-top: 0; border-top: 0; }
+.dg-say { margin-top: 10px; font-size: 13.5px; color: var(--mute); text-align: center; }
+.dg-bar { stroke-width: 1.5; }
+.dg-bar-a { fill: var(--accent-soft); stroke: var(--accent); }
+.dg-bar-b { fill: color-mix(in srgb, var(--wood) 20%, transparent); stroke: var(--wood); }
+.dg-div { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 3; fill: none; }
+.dg-extra { fill: var(--accent); opacity: .5; }
+.dg-gap { fill: none; stroke: var(--mute); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.dg-guide { stroke: var(--mute); stroke-width: 1.2; stroke-dasharray: 3 4; fill: none; }
+.dg-note { font: 700 12px var(--font); fill: var(--accent-ink); }
+.dg-symxs { font: italic 600 15px var(--math); fill: var(--accent-ink); }
+.chart { width: 100%; border-collapse: collapse; font-size: 14.5px; table-layout: fixed; }
+.chart caption { caption-side: top; text-align: left; padding-bottom: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--wood); }
+.chart th, .chart td { padding: 8px 6px; border: 1px solid var(--line); text-align: center; vertical-align: middle; overflow-wrap: anywhere; }
+.chart thead th { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--mute); background: var(--raised); }
+.chart thead td { border: 0; }
+.chart tbody th { text-align: left; font-weight: 650; font-size: 13.5px; background: var(--raised); width: 25%; }
+.chart td .math { font-size: 1.1em; color: var(--accent-ink); }
+.chart td small { display: block; color: var(--mute); font-size: 12px; }
+.chart-total th, .chart-total td { border-top: 2px solid var(--ink); font-weight: 700; }
+.chart-q { display: inline-grid; place-items: center; min-width: 26px; height: 26px; border-radius: 8px; border: 1.5px dashed var(--mute); color: var(--mute); font-weight: 700; }
+.chart-na { color: var(--faint); font-size: 12px; font-weight: 500; }
+.pp-picture { margin: 0 0 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--line); font-family: var(--font); }
+
 /* ---- 6. Paper ---------------------------------------------------------------------- */
 .paper { padding: 13px 16px 14px; border-radius: var(--r); background: var(--paper); color: var(--paper-ink); border: 1px solid var(--line); font-family: var(--math); }
 .paper .eyebrow { font-family: var(--font); margin-bottom: 4px; }
